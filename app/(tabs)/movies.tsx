@@ -10,9 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import MovieCard from "@/components/MovieCard";
 import Slider from "@/components/Trending/Slider";
 import SearchBar from "@/components/SearchBar";
-import { StatusBar } from "expo-status-bar";
 import { Movie } from "@/types";
-import { fetchMovies, fetchTopRated } from "@/utils";
+import { fetchMovies, fetchTopRatedMovies } from "@/api/movies";
 
 export default function MoviesScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -25,7 +24,7 @@ export default function MoviesScreen() {
 
   const { data: topRated, isLoading: isLoadingTopRated } = useQuery({
     queryKey: ["topRatedMovies"],
-    queryFn: () => fetchTopRated("movie"),
+    queryFn: () => fetchTopRatedMovies(),
     select: (data) => data.results.slice(0, 5),
   });
 
@@ -47,51 +46,48 @@ export default function MoviesScreen() {
   }
 
   return (
-    <>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="Search movies..."
+    <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search movies..."
+      />
+
+      {!searchQuery.trim() && (
+        <>
+          <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+            Trending Movies
+          </Text>
+          <Slider data={topRated} />
+        </>
+      )}
+
+      <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+        {searchQuery.trim() ? "Search Results" : "All Movies"}
+      </Text>
+
+      {filteredMovies.length === 0 && searchQuery.trim() !== "" ? (
+        <View style={styles.noResultsContainer}>
+          <Text style={styles.noResultsText}>No movies found</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredMovies}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <View style={styles.singleCardContainer}>
+              <MovieCard
+                item={item}
+                imageStyle={styles.cardImage}
+                titleStyle={styles.cardTitle}
+                ratingStyle={styles.cardRating}
+              />
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
         />
-
-        {!searchQuery.trim() && (
-          <>
-            <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-              Trending Movies
-            </Text>
-            <Slider data={topRated} />
-          </>
-        )}
-
-        <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-          {searchQuery.trim() ? "Search Results" : "All Movies"}
-        </Text>
-
-        {filteredMovies.length === 0 && searchQuery.trim() !== "" ? (
-          <View style={styles.noResultsContainer}>
-            <Text style={styles.noResultsText}>No movies found</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredMovies}
-            contentContainerStyle={styles.listContent}
-            renderItem={({ item }) => (
-              <View style={styles.singleCardContainer}>
-                <MovieCard
-                  item={item}
-                  imageStyle={styles.cardImage}
-                  titleStyle={styles.cardTitle}
-                  ratingStyle={styles.cardRating}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        )}
-      </View>
-    </>
+      )}
+    </View>
   );
 }
 

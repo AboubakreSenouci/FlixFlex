@@ -6,16 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { StatusBar } from "expo-status-bar";
 import { Genre, Video, VideoResponse } from "@/types";
-import { fetchMovieDetails, fetchMovieVideos } from "@/utils";
+import Loading from "@/components/Loading";
+import { fetchMovieDetails, fetchMovieVideos } from "@/api/movies";
 
 export default function MovieDetailsScreen() {
   const { id } = useLocalSearchParams() as { id: string };
@@ -24,7 +22,7 @@ export default function MovieDetailsScreen() {
 
   const { data: movie, isLoading: isLoadingDetails } = useQuery({
     queryKey: ["movie", id],
-    queryFn: () => fetchMovieDetails(id),
+    queryFn: () => fetchMovieDetails(Number(id)),
   });
 
   const { data: videos, isLoading: isLoadingVideos } = useQuery<
@@ -33,7 +31,7 @@ export default function MovieDetailsScreen() {
     Video | null
   >({
     queryKey: ["movieVideos", id],
-    queryFn: (): Promise<VideoResponse> => fetchMovieVideos(id),
+    queryFn: (): Promise<VideoResponse> => fetchMovieVideos(Number(id)),
     select: (data: VideoResponse): Video | null => {
       const trailers = data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
@@ -42,30 +40,21 @@ export default function MovieDetailsScreen() {
     },
   });
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
   if (isLoadingDetails || isLoadingVideos) {
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <StatusBar style="light" />
-
-        <ActivityIndicator size="large" color="#FFF" />
-      </SafeAreaView>
-    );
+    return <Loading />;
   }
 
   if (!movie) {
     return (
-      <SafeAreaView style={styles.errorContainer}>
-        <StatusBar style="light" />
-
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+      <>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Ionicons name="arrow-back" size={24} color="#FFF" />
         </TouchableOpacity>
         <Text style={styles.errorText}>Movie not found</Text>
-      </SafeAreaView>
+      </>
     );
   }
 
@@ -98,9 +87,8 @@ export default function MovieDetailsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+    <>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -150,7 +138,7 @@ export default function MovieDetailsScreen() {
           <Text style={styles.overviewText}>{movie.overview}</Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 }
 

@@ -6,16 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { StatusBar } from "expo-status-bar";
 import { Genre } from "@/types";
-import { fetchSeriesDetails, fetchSeriesVideos } from "@/utils";
+import Loading from "@/components/Loading";
+import { fetchSeriesDetails, fetchSeriesVideos } from "@/api/series";
 
 export default function SeriesDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -24,12 +22,12 @@ export default function SeriesDetailsScreen() {
 
   const { data: series, isLoading: isLoadingDetails } = useQuery({
     queryKey: ["series", id],
-    queryFn: () => fetchSeriesDetails(id),
+    queryFn: () => fetchSeriesDetails(Number(id)),
   });
 
   const { data: videos, isLoading: isLoadingVideos } = useQuery({
     queryKey: ["seriesVideos", id],
-    queryFn: () => fetchSeriesVideos(id),
+    queryFn: () => fetchSeriesVideos(Number(id)),
     select: (data) => {
       const trailers = data.results.filter(
         (video: { type: string; site: string }) =>
@@ -39,28 +37,21 @@ export default function SeriesDetailsScreen() {
     },
   });
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
   if (isLoadingDetails || isLoadingVideos) {
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <StatusBar style="light" />
-        <ActivityIndicator size="large" color="#FFF" />
-      </SafeAreaView>
-    );
+    return <Loading />;
   }
 
   if (!series) {
     return (
-      <SafeAreaView style={styles.errorContainer}>
-        <StatusBar style="light" />
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+      <>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Ionicons name="arrow-back" size={24} color="#FFF" />
         </TouchableOpacity>
         <Text style={styles.errorText}>Series not found</Text>
-      </SafeAreaView>
+      </>
     );
   }
 
@@ -93,9 +84,8 @@ export default function SeriesDetailsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+    <>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -153,7 +143,7 @@ export default function SeriesDetailsScreen() {
           <Text style={styles.overviewText}>{series.overview}</Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -164,12 +154,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#0F0F0F",
   },
   errorContainer: {
     flex: 1,

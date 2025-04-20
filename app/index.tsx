@@ -9,7 +9,6 @@ import {
   FlatList,
 } from "react-native";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { OnboardingItem, ViewableItemsChanged } from "@/types";
 import { onboardingData } from "@/constants";
 
@@ -88,7 +87,6 @@ export default function OnboardingScreen(): JSX.Element {
 
   return (
     <>
-      <StatusBar style="light" />
       <FlatList
         ref={flatListRef}
         data={onboardingData}

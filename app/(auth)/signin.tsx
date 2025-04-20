@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { FormSubmitButton, FormTextField } from "@/components";
 import { SignInForm, SignInSchema } from "@/types";
 import { signIn } from "@/services/auth";
@@ -25,40 +24,37 @@ export default function SignIn() {
   };
 
   return (
-    <>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign In</Text>
 
-        <FormProvider {...methods}>
-          <FormTextField
-            name="email"
-            control={methods.control}
-            placeholder="Email"
-            autoCapitalize="none"
+      <FormProvider {...methods}>
+        <FormTextField
+          name="email"
+          control={methods.control}
+          placeholder="Email"
+          autoCapitalize="none"
+        />
+
+        <FormTextField
+          name="password"
+          control={methods.control}
+          placeholder="Password"
+          secureTextEntry
+        />
+
+        <View style={styles.button}>
+          <FormSubmitButton
+            onSubmit={onSubmit}
+            title="Sign In"
+            style={styles.submitButton}
           />
+        </View>
 
-          <FormTextField
-            name="password"
-            control={methods.control}
-            placeholder="Password"
-            secureTextEntry
-          />
-
-          <View style={styles.button}>
-            <FormSubmitButton
-              onSubmit={onSubmit}
-              title="Sign In"
-              style={styles.submitButton}
-            />
-          </View>
-
-          <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
-            <Text style={styles.link}>Don't have an account? Sign Up</Text>
-          </TouchableOpacity>
-        </FormProvider>
-      </View>
-    </>
+        <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
+          <Text style={styles.link}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
+      </FormProvider>
+    </View>
   );
 }
 

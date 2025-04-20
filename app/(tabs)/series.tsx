@@ -1,17 +1,12 @@
 import React, { useState, useMemo } from "react";
-import {
-  FlatList,
-  View,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { FlatList, View, Text, StyleSheet } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import Slider from "@/components/Trending/Slider";
 import SeriesCard from "@/components/SerieCard";
 import SearchBar from "@/components/SearchBar";
-import { StatusBar } from "expo-status-bar";
-import { fetchSeries, fetchTopRated } from "@/utils";
+import Loading from "@/components/Loading";
+import { fetchSeries } from "@/api/series";
+import { fetchTopRatedMovies } from "@/api/movies";
 
 export default function SeriesScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -24,7 +19,7 @@ export default function SeriesScreen() {
 
   const { data: topRated, isLoading: isLoadingTopRated } = useQuery({
     queryKey: ["topRatedSeries"],
-    queryFn: () => fetchTopRated("tv"),
+    queryFn: () => fetchTopRatedMovies(),
     select: (data) => data.results.slice(0, 5),
   });
 
@@ -38,66 +33,52 @@ export default function SeriesScreen() {
   }, [series, searchQuery]);
 
   if (isLoadingSeries || isLoadingTopRated) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#0F0F0F",
-        }}
-      >
-        <ActivityIndicator size="large" color="#FFF" />
-      </View>
-    );
+    return <Loading />;
   }
 
   return (
-    <>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="Search series..."
+    <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search series..."
+      />
+
+      {!searchQuery.trim() && (
+        <>
+          <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+            Trending Series
+          </Text>
+          <Slider data={topRated} />
+        </>
+      )}
+
+      <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+        {searchQuery.trim() ? "Search Results" : "All Series"}
+      </Text>
+
+      {filteredSeries.length === 0 && searchQuery.trim() !== "" ? (
+        <View style={styles.noResultsContainer}>
+          <Text style={styles.noResultsText}>No series found</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredSeries}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <View style={styles.singleCardContainer}>
+              <SeriesCard
+                item={item}
+                imageStyle={styles.cardImage}
+                titleStyle={styles.cardTitle}
+                ratingStyle={styles.cardRating}
+              />
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
         />
-
-        {!searchQuery.trim() && (
-          <>
-            <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-              Trending Series
-            </Text>
-            <Slider data={topRated} />
-          </>
-        )}
-
-        <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-          {searchQuery.trim() ? "Search Results" : "All Series"}
-        </Text>
-
-        {filteredSeries.length === 0 && searchQuery.trim() !== "" ? (
-          <View style={styles.noResultsContainer}>
-            <Text style={styles.noResultsText}>No series found</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredSeries}
-            contentContainerStyle={styles.listContent}
-            renderItem={({ item }) => (
-              <View style={styles.singleCardContainer}>
-                <SeriesCard
-                  item={item}
-                  imageStyle={styles.cardImage}
-                  titleStyle={styles.cardTitle}
-                  ratingStyle={styles.cardRating}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        )}
-      </View>
-    </>
+      )}
+    </View>
   );
 }
 
