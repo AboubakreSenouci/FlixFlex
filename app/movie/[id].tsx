@@ -31,20 +31,6 @@ export default function MovieDetailsScreen() {
     return <Loading />;
   }
 
-  if (!movie) {
-    return (
-      <>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="arrow-back" size={24} color="#FFF" />
-        </TouchableOpacity>
-        <Text style={styles.errorText}>Movie not found</Text>
-      </>
-    );
-  }
-
   const renderTrailer = () => {
     if (!videos) {
       return (
@@ -57,7 +43,7 @@ export default function MovieDetailsScreen() {
     if (playTrailer) {
       return (
         <View style={styles.trailerContainer}>
-          <YoutubePlayer height={220} play={true} />
+          <YoutubePlayer height={220} play={true} videoId={videos.key} />
         </View>
       );
     }
@@ -136,6 +122,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+    backgroundColor: "#0F0F0F",
   },
   loadingContainer: {
     flex: 1,
@@ -156,6 +143,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: 16,
+    top: 40,
     zIndex: 10,
     width: 40,
     height: 40,
@@ -166,11 +154,14 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
-    height: 250,
+    height: 400,
+    marginTop: -40,
+    paddingBottom: 40,
   },
   backdropImage: {
     width: "100%",
-    height: "100%",
+    height: "110%",
+    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

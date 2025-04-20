@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,29 +8,44 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { router } from "expo-router";
 import { OnboardingItem, ViewableItemsChanged } from "@/types";
 import { onboardingData } from "@/constants";
+import { useOnboardingStatus } from "@/hooks/use-onboarding-status";
+import Loading from "@/components/Loading";
 
 const { width } = Dimensions.get("window");
 
 export default function OnboardingScreen(): JSX.Element {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const flatListRef = useRef<FlatList<OnboardingItem> | null>(null);
+  const isCheckingOnboardingStatus = useOnboardingStatus();
 
-  const handleNext = (): void => {
+  const handleNext = async (): Promise<void> => {
     if (currentIndex < onboardingData.length - 1) {
       flatListRef.current?.scrollToIndex({
         index: currentIndex + 1,
         animated: true,
       });
     } else {
-      router.replace("/(auth)/signin");
+      try {
+        await AsyncStorage.setItem("@onboarding_completed", "true");
+        router.replace("/(auth)/signin");
+      } catch (error) {
+        router.replace("/(auth)/signin");
+      }
     }
   };
 
-  const handleSkip = (): void => {
-    router.replace("/(auth)/signin");
+  const handleSkip = async (): Promise<void> => {
+    try {
+      await AsyncStorage.setItem("@onboarding_completed", "true");
+      router.replace("/(auth)/signin");
+    } catch (error) {
+      router.replace("/(auth)/signin");
+    }
   };
 
   const handleViewableItemsChanged = useRef((info: ViewableItemsChanged) => {
@@ -84,6 +99,10 @@ export default function OnboardingScreen(): JSX.Element {
       </View>
     );
   };
+
+  if (!isCheckingOnboardingStatus) {
+    return <Loading />;
+  }
 
   return (
     <FlatList

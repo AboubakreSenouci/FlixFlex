@@ -17,5 +17,6 @@ export function useTopRatedMovies() {
   return useQuery({
     queryKey: ["movies", "top-rated"],
     queryFn: fetchTopRatedMovies,
+    select: (data) => data.results
   });
 }

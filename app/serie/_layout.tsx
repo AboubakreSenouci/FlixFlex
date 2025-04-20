@@ -6,8 +6,7 @@ export default function SeriesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerShown: true,
-          headerTitle: "Series Details",
+          headerShown: false,
           headerStyle: {
             backgroundColor: "#0F0F0F",
           },

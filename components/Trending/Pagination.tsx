@@ -6,17 +6,17 @@ import Animated, {
 } from "react-native-reanimated";
 
 const Pagination = ({
-  posts,
+  data,
   currentIndex,
   scrollX,
 }: {
-  posts: any[];
+  data: any[];
   currentIndex: number;
   scrollX: Animated.SharedValue<number>;
 }) => {
   return (
     <View style={styles.paginationContainer}>
-      {posts.map((_, index) => (
+      {data?.map((_, index) => (
         <View key={index}>
           <PaginationItem
             scrollX={scrollX}

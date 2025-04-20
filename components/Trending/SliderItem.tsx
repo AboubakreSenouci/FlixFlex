@@ -1,19 +1,22 @@
-import { useWindowDimensions, StyleSheet } from "react-native";
+import {
+  useWindowDimensions,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { Image } from "react-native";
+import { SliderItemProps } from "@/types";
 
-interface SliderItemProps {
-  index: number;
-  thumbnail: string;
-  scrollX: SharedValue<number>;
-}
-
-const SliderItem = ({ index, thumbnail, scrollX }: SliderItemProps) => {
+const SliderItem = ({
+  index,
+  thumbnail,
+  scrollX,
+  onPress,
+}: SliderItemProps) => {
   const { width } = useWindowDimensions();
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -40,13 +43,17 @@ const SliderItem = ({ index, thumbnail, scrollX }: SliderItemProps) => {
   });
 
   return (
-    <Animated.View style={[{ width: width }, animatedStyle, styles.container]}>
-      <Image
-        source={{ uri: thumbnail }}
-        style={styles.image}
-        resizeMode="cover"
-      />
-    </Animated.View>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+      <Animated.View
+        style={[{ width: width }, animatedStyle, styles.container]}
+      >
+        <Image
+          source={{ uri: thumbnail }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 

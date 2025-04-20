@@ -14,5 +14,11 @@ export function useSeriesVideos(seriesId: number) {
     queryKey: ["series", seriesId, "videos"],
     queryFn: () => fetchSeriesVideos(seriesId),
     enabled: !!seriesId,
+    select: (data) => {
+      return data.results?.find(
+        (video: any) =>
+          video.type === "Trailer" && video.official && video.site === "YouTube"
+      );
+    },
   });
 }

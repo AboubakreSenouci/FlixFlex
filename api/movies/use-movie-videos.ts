@@ -14,5 +14,11 @@ export function useMovieVideos(movieId: number) {
     queryKey: ["movie", movieId, "videos"],
     queryFn: () => fetchMovieVideos(movieId),
     enabled: !!movieId,
+    select: (data) => {
+      return data.results?.find(
+        (video: any) =>
+          video.type === "Trailer" && video.official && video.site === "YouTube"
+      );
+    },
   });
 }

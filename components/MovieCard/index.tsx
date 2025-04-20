@@ -11,12 +11,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
 }) => {
   const router = useRouter();
 
-  const handlePress = () => {
-    router.push(`/movie/${item.id}`);
-  };
-
   return (
-    <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity onPress={() => router.push(`/movie/${item.id}`)}>
       <Image
         source={{
           uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,

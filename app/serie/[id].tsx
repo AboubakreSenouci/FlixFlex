@@ -31,20 +31,6 @@ export default function SeriesDetailsScreen() {
     return <Loading />;
   }
 
-  if (!series) {
-    return (
-      <>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="arrow-back" size={24} color="#FFF" />
-        </TouchableOpacity>
-        <Text style={styles.errorText}>Series not found</Text>
-      </>
-    );
-  }
-
   const renderTrailer = (): JSX.Element => {
     if (!videos) {
       return (
@@ -75,7 +61,10 @@ export default function SeriesDetailsScreen() {
 
   return (
     <>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/series")}
+      >
         <Ionicons name="arrow-back" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -144,6 +133,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+    backgroundColor: "#0F0F0F",
   },
   errorContainer: {
     flex: 1,
@@ -161,6 +151,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     width: 40,
     height: 40,
+    top: 40,
     borderRadius: 20,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
@@ -168,11 +159,13 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
-    height: 250,
+    height: 400,
+    marginTop: -40,
   },
   backdropImage: {
     width: "100%",
     height: "100%",
+    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

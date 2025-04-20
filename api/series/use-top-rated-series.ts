@@ -15,5 +15,6 @@ export function useTopRatedSeries() {
   return useQuery({
     queryKey: ["series", "top-rated"],
     queryFn: fetchTopRatedSeries,
+    select: (data) => data.results,
   });
 }

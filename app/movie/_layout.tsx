@@ -6,8 +6,7 @@ export default function MovieLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerShown: true,
-          headerTitle: "Movie Details",
+          headerShown: false,
           headerStyle: {
             backgroundColor: "#0F0F0F",
           },

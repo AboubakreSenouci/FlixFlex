@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
@@ -18,9 +18,12 @@ export default function SignIn() {
     try {
       await signIn(data.email, data.password);
       router.replace("/(tabs)/movies");
-      // router.push("/(auth)/test");
-    } catch (error) {
-      console.log("ERROR", error);
+    } catch (error: any) {
+      Alert.alert(
+        "Sign In Failed",
+        error?.message || "Invalid email or password",
+        [{ text: "OK" }]
+      );
     }
   };
 

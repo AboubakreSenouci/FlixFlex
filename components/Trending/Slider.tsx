@@ -6,18 +6,9 @@ import Animated, {
 import { View, StyleSheet } from "react-native";
 import SliderItem from "./SliderItem";
 import Pagination from "./Pagination";
+import { SliderProps } from "@/types";
 
-interface Movie {
-  id: number;
-  poster_path: string;
-  title: string;
-}
-
-interface SliderProps {
-  data: Movie[];
-}
-
-const Slider = ({ data }: SliderProps) => {
+const Slider = ({ data, onItemPress }: SliderProps) => {
   const scrollX = useSharedValue(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -44,6 +35,7 @@ const Slider = ({ data }: SliderProps) => {
             index={index}
             thumbnail={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
             scrollX={scrollX}
+            onPress={() => onItemPress(item.id)}
           />
         )}
         horizontal
@@ -56,11 +48,7 @@ const Slider = ({ data }: SliderProps) => {
         keyExtractor={(item) => item.id.toString()}
       />
       <View>
-        <Pagination
-          posts={data}
-          currentIndex={currentIndex}
-          scrollX={scrollX}
-        />
+        <Pagination data={data} currentIndex={currentIndex} scrollX={scrollX} />
       </View>
     </View>
   );
@@ -70,7 +58,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     rowGap: 16,
-    paddingBottom: 24,
+    paddingBottom: 8,
+    paddingHorizontal: 0,
   },
 });
 

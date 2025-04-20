@@ -3,6 +3,7 @@ import { z } from "zod";
 import { StyleProp, ImageStyle, TextStyle } from "react-native";
 
 import { ViewToken } from "react-native";
+import { SharedValue } from "react-native-reanimated";
 
 export interface OnboardingItem {
   id: string;
@@ -10,6 +11,24 @@ export interface OnboardingItem {
   description: string;
   image: ImageSourcePropType;
   backgroundColor: string;
+}
+
+export interface SliderItemProps {
+  index: number;
+  thumbnail: string;
+  scrollX: SharedValue<number>;
+  onPress: () => void;
+}
+
+export interface Movie {
+  id: number;
+  poster_path: string;
+  title: string;
+}
+
+export interface SliderProps {
+  data: Movie[];
+  onItemPress: (id: number) => void;
 }
 
 export interface SeriesCardProps {

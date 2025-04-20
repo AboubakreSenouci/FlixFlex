@@ -18,7 +18,7 @@ export default function SignUp() {
       await signUp(data.email, data.password);
       router.replace("/(auth)/signin");
     } catch (error) {
-      console.log("ERROR", error);
+      // console.log("ERROR", error);
     }
   };
 
