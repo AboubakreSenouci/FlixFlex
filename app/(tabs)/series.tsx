@@ -1,27 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import Slider from "@/components/Trending/Slider";
 import SeriesCard from "@/components/SerieCard";
 import SearchBar from "@/components/SearchBar";
 import Loading from "@/components/Loading";
-import { fetchSeries } from "@/api/series";
-import { fetchTopRatedMovies } from "@/api/movies";
+import { useSeries, useTopRatedSeries } from "@/api/series";
 
 export default function SeriesScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const { data: series, isLoading: isLoadingSeries } = useQuery({
-    queryKey: ["series"],
-    queryFn: fetchSeries,
-    select: (data) => data.results,
-  });
+  const { data: series, isLoading: isLoadingSeries } = useSeries();
 
-  const { data: topRated, isLoading: isLoadingTopRated } = useQuery({
-    queryKey: ["topRatedSeries"],
-    queryFn: () => fetchTopRatedMovies(),
-    select: (data) => data.results.slice(0, 5),
-  });
+  const { data: topRated, isLoading: isLoadingTopRated } = useTopRatedSeries();
 
   const filteredSeries = useMemo(() => {
     if (!series) return [];

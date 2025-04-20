@@ -1,19 +1,7 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { StyleProp, ImageStyle, TextStyle } from "react-native";
-
-interface SeriesCardProps {
-  item: {
-    id: string;
-    name: string;
-    poster_path: string;
-    vote_average: number;
-  };
-  imageStyle?: StyleProp<ImageStyle>;
-  titleStyle?: StyleProp<TextStyle>;
-  ratingStyle?: StyleProp<TextStyle>;
-}
+import { SeriesCardProps } from "@/types";
 
 const SeriesCard: React.FC<SeriesCardProps> = ({
   item,

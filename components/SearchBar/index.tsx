@@ -1,22 +1,7 @@
 import React from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
-interface SearchBarProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  placeholder?: string;
-  onClear?: () => void;
-  containerStyle?: ViewStyle;
-  inputStyle?: TextStyle;
-}
+import { SearchBarProps } from "@/types";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   searchQuery,

@@ -6,27 +6,18 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import MovieCard from "@/components/MovieCard";
 import Slider from "@/components/Trending/Slider";
 import SearchBar from "@/components/SearchBar";
 import { Movie } from "@/types";
-import { fetchMovies, fetchTopRatedMovies } from "@/api/movies";
+import { useMovies, useTopRatedMovies } from "@/api/movies";
 
 export default function MoviesScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const { data: movies, isLoading: isLoadingMovies } = useQuery({
-    queryKey: ["movies"],
-    queryFn: fetchMovies,
-    select: (data) => data.results,
-  });
+  const { data: movies, isLoading: isLoadingMovies } = useMovies();
 
-  const { data: topRated, isLoading: isLoadingTopRated } = useQuery({
-    queryKey: ["topRatedMovies"],
-    queryFn: () => fetchTopRatedMovies(),
-    select: (data) => data.results.slice(0, 5),
-  });
+  const { data: topRated, isLoading: isLoadingTopRated } = useTopRatedMovies();
 
   const filteredMovies = useMemo(() => {
     if (!movies) return [];
@@ -52,7 +43,7 @@ export default function MoviesScreen() {
         setSearchQuery={setSearchQuery}
         placeholder="Search movies..."
       />
-
+{/* 
       {!searchQuery.trim() && (
         <>
           <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
@@ -86,7 +77,7 @@ export default function MoviesScreen() {
           )}
           keyExtractor={(item) => item.id.toString()}
         />
-      )}
+      )} */}
     </View>
   );
 }

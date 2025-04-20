@@ -7,38 +7,25 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { Genre, Video, VideoResponse } from "@/types";
+import { Genre } from "@/types";
 import Loading from "@/components/Loading";
-import { fetchMovieDetails, fetchMovieVideos } from "@/api/movies";
+import { useMovieDetails, useMovieVideos } from "@/api/movies";
 
 export default function MovieDetailsScreen() {
   const { id } = useLocalSearchParams() as { id: string };
   const router = useRouter();
   const [playTrailer, setPlayTrailer] = useState(false);
 
-  const { data: movie, isLoading: isLoadingDetails } = useQuery({
-    queryKey: ["movie", id],
-    queryFn: () => fetchMovieDetails(Number(id)),
-  });
+  const { data: movie, isLoading: isLoadingDetails } = useMovieDetails(
+    Number(id)
+  );
 
-  const { data: videos, isLoading: isLoadingVideos } = useQuery<
-    VideoResponse,
-    Error,
-    Video | null
-  >({
-    queryKey: ["movieVideos", id],
-    queryFn: (): Promise<VideoResponse> => fetchMovieVideos(Number(id)),
-    select: (data: VideoResponse): Video | null => {
-      const trailers = data.results.filter(
-        (video) => video.type === "Trailer" && video.site === "YouTube"
-      );
-      return trailers.length > 0 ? trailers[0] : null;
-    },
-  });
+  const { data: videos, isLoading: isLoadingVideos } = useMovieVideos(
+    Number(id)
+  );
 
   if (isLoadingDetails || isLoadingVideos) {
     return <Loading />;

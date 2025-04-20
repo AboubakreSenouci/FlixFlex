@@ -1,19 +1,7 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { ImageStyle, TextStyle } from "react-native";
-
-type MovieCardProps = {
-  item: {
-    id: number;
-    poster_path: string;
-    title: string;
-    vote_average: number;
-  };
-  imageStyle?: ImageStyle;
-  titleStyle?: TextStyle;
-  ratingStyle?: TextStyle;
-};
+import { MovieCardProps } from "@/types";
 
 const MovieCard: React.FC<MovieCardProps> = ({
   item,

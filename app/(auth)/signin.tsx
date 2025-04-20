@@ -18,6 +18,7 @@ export default function SignIn() {
     try {
       await signIn(data.email, data.password);
       router.replace("/(tabs)/movies");
+      // router.push("/(auth)/test");
     } catch (error) {
       console.log("ERROR", error);
     }

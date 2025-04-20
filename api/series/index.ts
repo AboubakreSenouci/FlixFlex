@@ -1,4 +1,4 @@
-export { fetchSeries } from "./fetchSeries";
-export { fetchTopRatedSeries } from "./fetchTopRatedSeries";
-export { fetchSeriesDetails } from "./fetchSeriesDetails";
-export { fetchSeriesVideos } from "./fetchSeriesVideos";
+export { useSeries } from "./use-series";
+export { useTopRatedSeries } from "./use-top-rated-series";
+export { useSeriesDetails } from "./use-series-details";
+export { useSeriesVideos } from "./use-series-videos";

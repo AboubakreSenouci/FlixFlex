@@ -1,5 +1,6 @@
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType, ViewStyle } from "react-native";
 import { z } from "zod";
+import { StyleProp, ImageStyle, TextStyle } from "react-native";
 
 import { ViewToken } from "react-native";
 
@@ -10,6 +11,38 @@ export interface OnboardingItem {
   image: ImageSourcePropType;
   backgroundColor: string;
 }
+
+export interface SeriesCardProps {
+  item: {
+    id: string;
+    name: string;
+    poster_path: string;
+    vote_average: number;
+  };
+  imageStyle?: StyleProp<ImageStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  ratingStyle?: StyleProp<TextStyle>;
+}
+
+export interface SearchBarProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  placeholder?: string;
+  onClear?: () => void;
+  containerStyle?: ViewStyle;
+  inputStyle?: TextStyle;
+}
+export type MovieCardProps = {
+  item: {
+    id: number;
+    poster_path: string;
+    title: string;
+    vote_average: number;
+  };
+  imageStyle?: ImageStyle;
+  titleStyle?: TextStyle;
+  ratingStyle?: TextStyle;
+};
 
 export interface Genre {
   id: number;

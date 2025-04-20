@@ -86,19 +86,17 @@ export default function OnboardingScreen(): JSX.Element {
   };
 
   return (
-    <>
-      <FlatList
-        ref={flatListRef}
-        data={onboardingData}
-        renderItem={renderItem}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={handleViewableItemsChanged}
-        viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-        keyExtractor={(item) => item.id}
-      />
-    </>
+    <FlatList
+      ref={flatListRef}
+      data={onboardingData}
+      renderItem={renderItem}
+      horizontal
+      pagingEnabled
+      showsHorizontalScrollIndicator={false}
+      onViewableItemsChanged={handleViewableItemsChanged}
+      viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+      keyExtractor={(item) => item.id}
+    />
   );
 }
 

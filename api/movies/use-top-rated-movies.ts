@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { API_BASE, API_KEY } from "../config";
 
-export async function fetchTopRatedMovies() {
+async function fetchTopRatedMovies() {
   const res = await fetch(
     `${API_BASE}/movie/top_rated?api_key=${API_KEY}&page=1`
   );
@@ -10,4 +11,11 @@ export async function fetchTopRatedMovies() {
     ...data,
     results: data.results.slice(0, 5),
   };
+}
+
+export function useTopRatedMovies() {
+  return useQuery({
+    queryKey: ["movies", "top-rated"],
+    queryFn: fetchTopRatedMovies,
+  });
 }
