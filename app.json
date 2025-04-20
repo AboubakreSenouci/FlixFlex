@@ -4,7 +4,6 @@
     "slug": "FlixFlex",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,14 +12,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.senouci.FlixFlex"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "static"
     },
     "plugins": [
       "expo-router",
@@ -36,6 +34,19 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d520e133-631a-4ca5-8f0f-0f7a5c2fb9bd"
+      },
+      "FIREBASE_API_KEY": "AIzaSyDMa6PwidM8dJx0ZmxKUgR3c0qnmsZn8jo",
+      "FIREBASE_AUTH_DOMAIN": "flixflex-82baa.firebaseapp.com",
+      "FIREBASE_PROJECT_ID": "flixflex-82baa",
+      "FIREBASE_STORAGE_BUCKET": "flixflex-82baa.appspot.com",
+      "FIREBASE_MESSAGING_SENDER_ID": "909674545130",
+      "FIREBASE_APP_ID": "1:909674545130:web:8f5f82f306c79b2688fc93",
+      "TMDB_API_KEY": "0e44cb51eda50c91cc72cdb6ddb46d0a",
+      "TMDB_BASE_URL": "https://api.themoviedb.org/3"
     }
   }
 }
