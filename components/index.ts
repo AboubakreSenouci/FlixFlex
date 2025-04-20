@@ -1,5 +1,5 @@
-export * from "./form/FormSubmitButton";
-export * from "./form/FormTextField";
+export * from "./Form/FormSubmitButton";
+export * from "./Form/FormTextField";
 export * from "./MovieCard";
 export * from "./Loading";
 export * from "./Trending/Pagination";

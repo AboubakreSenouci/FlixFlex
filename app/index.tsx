@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import { OnboardingItem, ViewableItemsChanged } from "@/types";
 import { onboardingData } from "@/constants";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function OnboardingScreen(): JSX.Element {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -107,7 +107,7 @@ export default function OnboardingScreen(): JSX.Element {
 const styles = StyleSheet.create({
   slide: {
     width,
-    height,
+    height: "100%",
     padding: 0,
     justifyContent: "space-between",
   },
