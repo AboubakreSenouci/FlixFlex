@@ -9,8 +9,7 @@ import {
 import MovieCard from "@/components/MovieCard";
 import Slider from "@/components/Trending/Slider";
 import SearchBar from "@/components/SearchBar";
-import { Movie } from "@/types";
-import { useMovies, useTopRatedMovies } from "@/api/movies";
+import { useMovies, useSearchMovies, useTopRatedMovies } from "@/api/movies";
 import Loading from "@/components/Loading";
 import { useRouter } from "expo-router";
 
@@ -31,24 +30,24 @@ export default function MoviesScreen() {
     isFetchingNextPage,
   } = useMovies();
 
+  const {
+    data: searchResults,
+    isLoading: isSearching,
+    isFetching: isFetchingSearch,
+  } = useSearchMovies(searchQuery);
+
   const movies = useMemo(() => {
     return combinePaginatedResults(data);
   }, [data]);
 
   const { data: topRated, isLoading: isLoadingTopRated } = useTopRatedMovies();
 
-  const filteredMovies = useMemo(() => {
-    if (!movies) return [];
-    if (!searchQuery.trim()) return movies;
-
-    return movies.filter((movie: Movie) =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [movies, searchQuery]);
-
-  if (isLoadingMovies || isLoadingTopRated) {
-    return <Loading />;
-  }
+  const displayedMovies = useMemo(() => {
+    if (searchQuery.trim()) {
+      return searchResults ?? [];
+    }
+    return movies;
+  }, [searchQuery, movies, searchResults]);
 
   const fetchMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -63,53 +62,75 @@ export default function MoviesScreen() {
         setSearchQuery={setSearchQuery}
         placeholder="Search movies...."
       />
-      <FlatList
-        ListHeaderComponent={
-          <>
-            {!searchQuery.trim() && (
-              <>
-                <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-                  Trending Movies
-                </Text>
-                <Slider
-                  data={topRated}
-                  onItemPress={(movieId) => {
-                    router.push(`/movie/${movieId}`);
-                  }}
-                />
-              </>
-            )}
-            <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
-              {searchQuery.trim() ? "Search Results" : "All Movies"}
-            </Text>
-          </>
-        }
-        data={filteredMovies}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <View style={styles.singleCardContainer}>
-            <MovieCard
-              item={item}
-              imageStyle={styles.cardImage}
-              titleStyle={styles.cardTitle}
-              ratingStyle={styles.cardRating}
-            />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={
-          <View style={styles.noResultsContainer}>
-            <Text style={styles.noResultsText}>No movies found</Text>
-          </View>
-        }
-        onEndReachedThreshold={0.5}
-        onEndReached={fetchMore}
-        ListFooterComponent={
-          isFetchingNextPage && movies.length !== 0 ? (
-            <ActivityIndicator />
-          ) : null
-        }
-      />
+
+      {(isLoadingTopRated || isLoadingMovies) && !searchQuery.trim() ? (
+        <Loading size={40} />
+      ) : (
+        <FlatList
+          ListHeaderComponent={
+            <>
+              {!searchQuery.trim() && (
+                <>
+                  <Text
+                    style={[styles.sectionTitle, { paddingHorizontal: 16 }]}
+                  >
+                    Trending Movies
+                  </Text>
+                  <Slider
+                    data={topRated}
+                    onItemPress={(movieId) => {
+                      router.push(`/movie/${movieId}`);
+                    }}
+                  />
+                </>
+              )}
+              <Text style={[styles.sectionTitle, { paddingHorizontal: 16 }]}>
+                {searchQuery.trim() ? "Search Results" : "All Movies"}
+              </Text>
+              {searchQuery.trim() && isFetchingSearch && (
+                <ActivityIndicator style={{ marginBottom: 10 }} />
+              )}
+            </>
+          }
+          data={displayedMovies}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <View style={styles.singleCardContainer}>
+              <MovieCard
+                item={item}
+                imageStyle={styles.cardImage}
+                titleStyle={styles.cardTitle}
+                ratingStyle={styles.cardRating}
+              />
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={() => {
+            if (searchQuery.trim()) {
+              if (isFetchingSearch || isSearching) {
+                return;
+              }
+
+              if ((searchResults?.length ?? 0) === 0) {
+                return (
+                  <View style={styles.noResultsContainer}>
+                    <Text style={styles.noResultsText}>No movies found</Text>
+                  </View>
+                );
+              }
+            }
+
+            return null;
+          }}
+          onEndReachedThreshold={0.5}
+          onEndReached={fetchMore}
+          ListFooterComponent={
+            !isFetchingSearch && isFetchingNextPage && movies.length !== 0 ? (
+              <ActivityIndicator />
+            ) : null
+          }
+        />
+      )}
     </View>
   );
 }
