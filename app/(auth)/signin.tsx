@@ -6,8 +6,11 @@ import { useRouter } from "expo-router";
 import { FormSubmitButton, FormTextField } from "@/components";
 import { SignInForm, SignInSchema } from "@/types";
 import { signIn } from "@/services/auth";
+import { useSigninStatus } from "@/hooks/use-signin-status";
+import Loading from "@/components/Loading";
 
 export default function SignIn() {
+  const isCheckingSigninStatus = useSigninStatus();
   const methods = useForm<SignInForm>({
     resolver: zodResolver(SignInSchema),
   });
@@ -26,6 +29,10 @@ export default function SignIn() {
       );
     }
   };
+
+  if (!isCheckingSigninStatus) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>

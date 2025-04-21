@@ -1,4 +1,5 @@
 import { auth } from "@/firebase/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -13,6 +14,7 @@ export const signUp = async (email: string, password: string) => {
       email,
       password
     );
+
     Toast.show({
       type: "success",
       text1: "Account created!",
@@ -36,6 +38,11 @@ export const signIn = async (email: string, password: string) => {
       email,
       password
     );
+
+    const token = await userCredential.user.getIdToken();
+
+    await AsyncStorage.setItem("userToken", token);
+
     Toast.show({
       type: "success",
       text1: "Welcome back!",
