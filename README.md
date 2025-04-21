@@ -194,7 +194,6 @@ FlixFlex uses EAS Update to deliver JavaScript updates without requiring new bui
    eas update --branch production --message "Bug fixes and performance improvements"
    ```
 
-
 ### EAS Update Configuration
 
 Our `eas.json` file contains the following update configurations:
@@ -224,7 +223,7 @@ Our `eas.json` file contains the following update configurations:
         "buildType": "apk"
       }
     }
-  },
+  }
 }
 ```
 
@@ -246,8 +245,7 @@ We created a dedicated API directory to:
 
 - Isolate external service calls
 - Implement proper error handling
-- Structure endpoints by domain (movies, series, authentication)
-- Enable easy mocking for testing
+- Structure endpoints by domain (movies, series, ...)
 
 ### Firebase Integration
 
@@ -257,16 +255,6 @@ Firebase was selected for authentication because it:
 - Offers multiple login methods (email/password, social)
 - Scales well with growing user bases
 - Integrates with other Firebase services for future expansion
-
-### The Movie Database API
-
-We chose TMDB API (https://www.themoviedb.org/documentation/api) for its:
-
-- Extensive database of movies and TV shows
-- High-quality imagery (posters, backdrops)
-- Detailed metadata (cast, crew, ratings)
-- Regular updates with new content
-- Well-documented endpoints
 
 ### Data Management
 

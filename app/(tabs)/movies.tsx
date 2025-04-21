@@ -12,16 +12,12 @@ import SearchBar from "@/components/SearchBar";
 import { useMovies, useSearchMovies, useTopRatedMovies } from "@/api/movies";
 import Loading from "@/components/Loading";
 import { useRouter } from "expo-router";
+import { combinePaginatedResults } from "@/utils/combine-paginated-results";
 
 export default function MoviesScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const combinePaginatedResults = (data) => {
-    if (!data || !Array.isArray(data.pages)) return [];
-
-    return data.pages.flatMap((page) => page.results || []);
-  };
   const {
     data,
     isLoading: isLoadingMovies,

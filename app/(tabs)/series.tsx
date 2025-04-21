@@ -12,15 +12,11 @@ import SearchBar from "@/components/SearchBar";
 import Loading from "@/components/Loading";
 import { useSeries, useTopRatedSeries, useSearchSeries } from "@/api/series";
 import { useRouter } from "expo-router";
+import { combinePaginatedResults } from "@/utils/combine-paginated-results";
 
 export default function SeriesScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
-
-  const combinePaginatedResults = (data) => {
-    if (!data || !Array.isArray(data.pages)) return [];
-    return data.pages.flatMap((page) => page.results || []);
-  };
 
   const {
     data,
