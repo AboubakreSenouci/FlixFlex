@@ -68,6 +68,8 @@ A comprehensive mobile application for exploring movies and TV series built with
 - Node.js (LTS version recommended)
 - npm or yarn
 - Expo CLI
+- EAS CLI (`npm install -g eas-cli`)
+- Expo account (create at [expo.dev](https://expo.dev))
 
 ### Installation
 
@@ -97,6 +99,136 @@ In the output, you'll find options to open the app in a:
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go), a sandbox environment for quick testing
+
+## Building the App
+
+FlixFlex uses EAS Build for creating production and preview builds.
+
+### Setup EAS Build
+
+1. Make sure you have the EAS CLI installed:
+
+   ```bash
+   npm install -g eas-cli
+   ```
+
+2. Log in to your Expo account:
+
+   ```bash
+   eas login
+   ```
+
+3. Configure your project for EAS Build (if not already done):
+   ```bash
+   eas build:configure
+   ```
+
+### Creating Builds
+
+#### Development Build
+
+Create a development build that can be installed on a device/emulator but includes development tools:
+
+```bash
+eas build --profile development --platform android
+# or
+eas build --profile development --platform ios
+```
+
+#### Preview Build
+
+Create a preview build for testing purposes:
+
+```bash
+eas build --profile preview --platform android
+# or
+eas build --profile preview --platform ios
+```
+
+#### Production Build
+
+Create a production-ready build for submission to app stores:
+
+```bash
+eas build --profile production --platform android
+# or
+eas build --profile production --platform ios
+```
+
+### Installing Builds
+
+After the build completes, you can:
+
+- Download and install the APK/IPA file directly
+
+## Using EAS Update
+
+FlixFlex uses EAS Update to deliver JavaScript updates without requiring new builds.
+
+### Sending Updates
+
+1. Make your changes to the app code
+
+2. Create and publish an update:
+
+   ```bash
+   eas update --branch [branch-name] --message "[update description]"
+   ```
+
+   Example:
+
+   ```bash
+   eas update --branch preview --message "Fix movie details loading bug"
+   ```
+
+3. For branch-specific updates:
+
+   ```bash
+   # For development branch
+   eas update --branch development --message "Add new feature X"
+
+   # For preview branch
+   eas update --branch preview --message "UI improvements"
+
+   # For production branch
+   eas update --branch production --message "Bug fixes and performance improvements"
+   ```
+
+
+### EAS Update Configuration
+
+Our `eas.json` file contains the following update configurations:
+
+```json
+{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug",
+        "withoutCredentials": true
+      }
+    },
+    "preview": {
+      "channel": "preview",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+}
+```
+
+This ensures updates are delivered to the correct channel based on the build type.
 
 ### Expo Router & File Structure
 
@@ -158,7 +290,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
