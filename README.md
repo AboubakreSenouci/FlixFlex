@@ -1,50 +1,164 @@
-# Welcome to your Expo app 👋
+# FlixFlex 🎬
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A comprehensive mobile application for exploring movies and TV series built with [Expo](https://expo.dev) and created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Browse Movies & TV Series**: Discover the latest films and shows
+- **Detailed Information**: View comprehensive details about your favorite content
+- **User Authentication**: Create an account to personalize your experience
+- **Tabbed Interface**: Easily switch between movies and series content
+
+## Technical Stack
+
+- **Expo Router**: File-based navigation system with `.tsx` files
+- **React Query**: Efficient data fetching and state management
+- **Firebase Authentication**: Secure user login and registration
+- **AsyncStorage**: Local data persistence
+- **The Movie Database API**: Comprehensive movie and TV series data source
+
+## Project Structure
+
+```
+/FlixFlex
+├── .expo/
+├── .vscode/
+├── android/
+├── api/                  # API service layers
+├── app/                  # Main application screens
+│   ├── (auth)/           # Authentication screens
+│   │   ├── _layout.tsx
+│   │   ├── signin.tsx
+│   │   └── signup.tsx
+│   ├── (tabs)/           # Main tab navigation
+│   │   ├── _layout.tsx
+│   │   ├── movies.tsx
+│   │   └── series.tsx
+│   ├── movie/            # Movie routes
+│   │   ├── _layout.tsx
+│   │   └── [id].tsx      # Dynamic movie detail route
+│   ├── serie/            # TV series routes
+│   │   ├── _layout.tsx
+│   │   └── [id].tsx      # Dynamic series detail route
+│   ├── _layout.tsx       # Root layout
+│   └── index.tsx         # Entry point
+├── assets/               # Images, fonts, etc.
+├── components/           # Reusable UI components
+├── constants/            # App constants
+├── dist/                 # Build output
+├── firebase/             # Firebase configuration
+├── hooks/                # Custom React hooks
+├── node_modules/
+├── scripts/              # Build and utility scripts
+├── services/             # Business logic services
+├── types/                # TypeScript type definitions
+├── .gitignore
+├── app.json              # Expo configuration
+├── eas.json              # EAS Build configuration
+├── package-lock.json
+├── package.json
+├── README.md
+└── tsconfig.json         # TypeScript configuration
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (LTS version recommended)
+- npm or yarn
+- Expo CLI
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/AboubakreSenouci/FlixFlex.git
+   cd FlixFlex
+   ```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Start the app
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Development Options
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+In the output, you'll find options to open the app in a:
+
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [Expo Go](https://expo.dev/go), a sandbox environment for quick testing
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Expo Router & File Structure
 
-## Get a fresh project
+We implemented a file-based routing system using Expo Router with TypeScript (`.tsx` files). The structure includes:
 
-When you're ready, run:
+- Authentication flow with protected routes
+- Tab-based navigation for separating movies and series
+- Dynamic routes for detailed content pages using parameters (`[id].tsx`)
 
-```bash
-npm run reset-project
-```
+This approach provides a clean separation of concerns and intuitive navigation.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### API Layer
 
-## Learn more
+We created a dedicated API directory to:
 
-To learn more about developing your project with Expo, look at the following resources:
+- Isolate external service calls
+- Implement proper error handling
+- Structure endpoints by domain (movies, series, authentication)
+- Enable easy mocking for testing
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Firebase Integration
 
-## Join the community
+Firebase was selected for authentication because it:
 
-Join our community of developers creating universal apps.
+- Provides secure, reliable user management
+- Offers multiple login methods (email/password, social)
+- Scales well with growing user bases
+- Integrates with other Firebase services for future expansion
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### The Movie Database API
+
+We chose TMDB API (https://www.themoviedb.org/documentation/api) for its:
+
+- Extensive database of movies and TV shows
+- High-quality imagery (posters, backdrops)
+- Detailed metadata (cast, crew, ratings)
+- Regular updates with new content
+- Well-documented endpoints
+
+### Data Management
+
+React Query was implemented to:
+
+- Handle loading and error states consistently
+- Reduce unnecessary network requests
+
+### AsyncStorage
+
+Used for persisting:
+
+- Recently viewed content
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
